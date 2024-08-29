@@ -1,0 +1,203 @@
+/* static/css/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100% !important;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filters input,
+.filters select,
+.filters button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.filters button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.filters button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead th {
+    background-color: #f8f9fa;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.instructor-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.edit-btn,
+.delete-btn, .details-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 18px;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.details-btn {
+    background-color: #d4c51d;
+    color: #ffffff;
+    font-size: 19px;
+    width: 40px;
+}
+
+.details-btn:hover {
+    background-color: #e0ce03;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    font-size: 18px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+}
+
+.pagination #page-info {
+    font-weight: bold;
+    color: #333;
+}
+
+.estrellas_instructor{
+    color: rgb(202 202 0);
+}
+
+.content_filtro{
+    display:flex;
+    flex-direction: column; 
+}
+
+.content_filtro div{
+    font-size: 12px;
+}
+
+#clear-filters{
+    padding: 15px !important;
+    background-color: #7000ff !important;
+}
+
+.fa-solid, .fas {
+    font-weight: 900;
+    font-size: 20px;
+}
+
+#reload-table{
+    background-color: #ffffff00 !important;
+    color: #8a8a8a !important;
+}
+
+#reload-table:hover{
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+}
+
+.btn_confirm{
+    color: #ffffff;
+    padding: 12px 10px;
+    background-color: #00b324;
+    border: 1px solid #00931d;
+    margin: 0 10px;
+}
+
+.btn_confirm:hover{
+    color: #ffffff;
+    background-color: #069121;
+    border: 1px solid #036f19;
+}
+
+.btn_cancel{
+    color: #ffffff;
+    padding: 12px 10px;
+    background-color: #b30000;
+    border: 1px solid #930000;
+    margin: 0 10px;
+}
+
+.btn_cancel:hover{
+    color: #ffffff;
+    background-color: #910606;
+    border: 1px solid #6f0303;
+}
+
+.horario-instructor {
+    white-space: pre-line;
+}
+

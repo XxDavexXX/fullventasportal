@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Instructores</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/c8fbfe19f2.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="filters">
+            
+
+            <div class="content_filtro">
+                <div>Buscar por nombre</div>
+                <input type="text" id="search" placeholder="Busca por nombre...">
+            </div>
+
+            <div class="content_filtro">
+                <div>Buscar por cargo</div>
+                <select id="filter-cargo">
+                    <option value="">Cargo</option>
+                    <!-- Opciones de cargo aquí -->
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Buscar por local</div>
+                <select id="filter-local">
+                    <option value="">Local</option>
+                    <!-- Opciones de local aquí -->
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Buscar por especialidad</div>
+                <select id="filter-especialidades">
+                    <option value="">Especialidad</option>
+                    <!-- Opciones de especialidad aquí -->
+                </select>
+            </div>
+            
+
+            <div class="content_filtro">
+                <div>Buscar por genero</div>
+                <select id="filter-genero">
+                    <option value="">Género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Buscar por estrellas</div>
+                <select id="filter-estrellas">
+                    <option value="">Estrellas</option>
+                    <option value="5">5 Estrellas</option>
+                    <option value="4">4 Estrellas</option>
+                    <option value="3">3 Estrellas</option>
+                    <option value="2">2 Estrellas</option>
+                    <option value="1">1 Estrella</option>
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Buscar por experiencia</div>
+                <select id="filter-experiencia">
+                    <option value="">Años de experiencia</option>
+                    <option value="1">1 año</option>
+                    <option value="2">2 años</option>
+                    <option value="3">3 años</option>
+                    <option value="4">4 años</option>
+                    <option value="5">5 años o más</option>
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Días de trabajo</div>
+                <select id="filter-dia">
+                    <option value="">Día</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Hora Inicio</div>
+                <input type="time" id="filter-hora-inicio" placeholder="Hora de inicio">
+            </div>
+
+            <div class="content_filtro">
+                <div>Hora Fin</div>
+                <input type="time" id="filter-hora-fin" placeholder="Hora de fin">
+            </div>
+        
+            <div class="content_filtro">
+                <div>Inicio de contrato</div>
+                <input type="date" id="filter-inicio-contrato" placeholder="Inicio de contrato">
+            </div>
+            
+            <div class="content_filtro">
+                <div>Fin de contrato</div>
+                <input type="date" id="filter-fin-contrato" placeholder="Fin de contrato">
+            </div>
+
+            <div class="content_filtro">
+                <div>Estado</div>
+                <select id="filter-estado">
+                    <option value="">Estado</option>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="content_filtro">
+                <div>Fecha de creación</div>
+                <input type="date" id="filter-fecha-creacion" placeholder="Fecha de creación">
+            </div>
+
+            <div class="content_filtro">
+                <div>Fecha de actualización</div>
+                <input type="date" id="filter-fecha-actualizacion" placeholder="Fecha de actualización">
+            </div>
+
+            
+            <button id="clear-filters">
+                <i class="fa-solid fa-eraser"></i>
+            </button>
+
+            <button id="create-user" onclick="window.location.href='/api/instructornew'">Crear usuario</button>
+
+        </div>
+
+       <!-- Modal -->
+       <div class="modal fade" id="horariosModal" tabindex="-1" aria-labelledby="horariosModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="horariosModalLabel">Horarios del Instructor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Día</th>
+                                    <th>Horario</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-horarios-content">
+                                <!-- Aquí se inyectarán los horarios en formato de tabla -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Información Personal -->
+        <div class="modal fade" id="infoPersonalModal" tabindex="-1" aria-labelledby="infoPersonalModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoPersonalModalLabel">Información Personal del Instructor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered">
+                            <tbody id="info-personal-content">
+                                <!-- Aquí se inyectarán los detalles en formato de tabla -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Modal Especialidades -->
+        <div class="modal fade" id="especialidadesModal" tabindex="-1" aria-labelledby="especialidadesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="especialidadesModalLabel">Especialidades del Instructor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Especialidad</th>
+                                    <th>Certificado</th>
+                                    <th>Fecha de Obtención</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-especialidades-content">
+                                <!-- Aquí se inyectarán las especialidades en formato de tabla -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Modal Descripción -->
+        <div class="modal fade" id="descripcionModal" tabindex="-1" aria-labelledby="descripcionModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="descripcionModalLabel">Descripción del Instructor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-descripcion-content">
+                        <!-- Aquí se inyectará la descripción -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Trabajador</th>
+                    <th>Número</th>
+                    <th>Inicio de contrato</th>
+                    <th>Fin de contrato</th>
+                    <th>Horario</th>
+                    <th>Especialidades</th>
+                    <th>Estrellas</th>
+                    <th>Años Exp.</th>
+                    <th>Descripción</th>
+                    <th>Género</th>
+                    <th>Cargo</th>
+                    <th>Local</th>
+                    <th>Estado</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Actualización</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+        
+            <tbody id="instructors-container">
+                <!-- Aquí se inyectarán las filas con los datos -->
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prev-page">Anterior</button>
+            <span id="page-info">1 de 1</span>
+            <button id="next-page">Siguiente</button>
+            <button id="reload-table" style="margin-left: 10px;">
+                <i class="fa-solid fa-sync-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(instructorId) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success btn_confirm",
+                    cancelButton: "btn btn-danger btn_cancel"
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: "¿Estás seguro?",
+                text: "¡No podrás revertir esto!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminarlo",
+                cancelButtonText: "No, cancelar",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteInstructor(instructorId, swalWithBootstrapButtons);
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelado",
+                        text: "El registro está a salvo :)",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+
+        function deleteInstructor(instructorId, swalWithBootstrapButtons) {
+            fetch(`/api/instructores/${instructorId}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ estado: false })
+            })
+            .then(response => {
+                if (response.ok) {
+                    swalWithBootstrapButtons.fire({
+                        title: "¡Eliminado!",
+                        text: "El registro ha sido eliminado.",
+                        icon: "success"
+                    }).then(() => {
+                        document.getElementById('reload-table').click();   // Simular clic en el botón de recarga
+                    });
+                } else {
+                    swalWithBootstrapButtons.fire({
+                        title: "Error",
+                        text: "Hubo un error al intentar eliminar el registro.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+
+        function btoaUnicode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        function atobUnicode(str) {
+            return decodeURIComponent(escape(atob(str)));
+        }
+
+
+        function btoaUnicode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        function atobUnicode(str) {
+            return decodeURIComponent(escape(atob(str)));
+        }
+
+        function showHorarios(horariosBase64, nombreInstructor) {
+            // Decodificar la cadena de base64
+            const horarios = JSON.parse(atobUnicode(horariosBase64));
+            const modalContent = document.getElementById('modal-horarios-content');
+            const modalTitle = document.getElementById('horariosModalLabel');
+
+            // Establecer el título del modal con el nombre del instructor
+            modalTitle.textContent = `Horarios del Instructor ${nombreInstructor}`;
+
+            // Limpiar el contenido del modal
+            modalContent.innerHTML = '';
+
+            // Insertar los horarios en la tabla, mostrando cada día y horario
+            horarios.forEach(horario => {
+                const row = document.createElement('tr');
+                
+                const dayCell = document.createElement('td');
+                dayCell.textContent = horario.dia;
+                row.appendChild(dayCell);
+
+                const timeCell = document.createElement('td');
+                timeCell.textContent = `${horario.hora_inicio} - ${horario.hora_fin}`;
+                row.appendChild(timeCell);
+
+                modalContent.appendChild(row);
+            });
+        }
+
+        function showInstructorInfo(instructorId, nombreCompleto) {
+            fetch(`/api/instructor-info-personal/${instructorId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const modalContent = document.getElementById('info-personal-content');
+                    const modalTitle = document.getElementById('infoPersonalModalLabel');
+
+                    // Limpiar contenido previo
+                    modalContent.innerHTML = '';
+
+                    // Establecer el título del modal con el nombre completo del instructor
+                    modalTitle.textContent = `Información Personal del Instructor ${nombreCompleto}`;
+
+                    // Crear filas para cada campo de información personal
+                    for (const [key, value] of Object.entries(data)) {
+                        if (key !== 'instructor') { // Excluir el campo de relación si es necesario
+                            const row = document.createElement('tr');
+
+                            const keyCell = document.createElement('td');
+                            keyCell.textContent = key.replace('_', ' ').toUpperCase();
+                            keyCell.classList.add('fw-bold'); // Clase de Bootstrap para negrita
+
+                            const valueCell = document.createElement('td');
+
+                            // Manejar el campo de redes sociales
+                            if (key === 'redes_sociales' && typeof value === 'object') {
+                                let redesHtml = '';
+                                for (const [network, username] of Object.entries(value)) {
+                                    redesHtml += `<strong>${network}:</strong> ${username}<br>`;
+                                }
+                                valueCell.innerHTML = redesHtml;
+                            } 
+                            // Manejar el campo estado
+                            else if (key === 'estado') {
+                                valueCell.innerHTML = `
+                                    <button style="background-color: ${value ? '#28a745' : '#dc3545'}; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: default;">
+                                        ${value ? 'Activo' : 'Inactivo'}
+                                    </button>
+                                `;
+                            } 
+                            // Manejar otros campos
+                            else {
+                                valueCell.textContent = value;
+                            }
+
+                            row.appendChild(keyCell);
+                            row.appendChild(valueCell);
+
+                            modalContent.appendChild(row);
+                        }
+                    }
+
+                    // Mostrar el modal
+                    const infoPersonalModal = new bootstrap.Modal(document.getElementById('infoPersonalModal'));
+                    infoPersonalModal.show();
+                })
+                .catch(error => {
+                    console.error('Error al cargar la información personal:', error);
+                    alert('No se pudo cargar la información personal del instructor.');
+                });
+        }
+
+
+
+
+
+
+
+        function showDescripcion(descripcion, nombreInstructor) {
+            const modalContent = document.getElementById('modal-descripcion-content');
+            const modalTitle = document.getElementById('descripcionModalLabel');
+
+            // Establecer el título del modal con el nombre del instructor
+            modalTitle.textContent = `Descripción del Instructor ${nombreInstructor}`;
+
+            // Insertar la descripción en el modal
+            modalContent.textContent = descripcion;
+        }
+
+        function showEspecialidades(especialidadesBase64, nombreInstructor) {
+            // Decodificar la cadena de base64
+            const especialidades = JSON.parse(atobUnicode(especialidadesBase64));
+            const modalContent = document.getElementById('modal-especialidades-content');
+            const modalTitle = document.getElementById('especialidadesModalLabel');
+
+            // Establecer el título del modal con el nombre del instructor
+            modalTitle.textContent = `Especialidades del Instructor ${nombreInstructor}`;
+
+            // Limpiar el contenido del modal
+            modalContent.innerHTML = '';
+
+            // Insertar las especialidades en la tabla
+            especialidades.forEach(especialidad => {
+                const row = document.createElement('tr');
+                
+                const especialidadCell = document.createElement('td');
+                especialidadCell.textContent = especialidad.nombre;
+                row.appendChild(especialidadCell);
+                
+                const certificadoCell = document.createElement('td');
+                const certificadoImg = document.createElement('img');
+                const rutaCertificado = `/media/${especialidad.ruta_imagen_certificado}`;
+                certificadoImg.src = rutaCertificado;
+                certificadoImg.alt = 'Certificado';
+                certificadoImg.style.width = '100px';  // Ajusta el tamaño de la imagen
+                certificadoCell.appendChild(certificadoImg);
+
+                // Crear el ícono de descarga
+                const downloadLink = document.createElement('a');
+                downloadLink.href = rutaCertificado;
+                downloadLink.download = especialidad.ruta_imagen_certificado.split('/').pop(); // Nombre del archivo para descargar
+                downloadLink.innerHTML = '<i class="fa-solid fa-download" style="margin-left: 10px;"></i>';
+                certificadoCell.appendChild(downloadLink);
+
+                row.appendChild(certificadoCell);
+
+                const fechaCell = document.createElement('td');
+                fechaCell.textContent = new Date(especialidad.fecha_obtencion_certificado).toLocaleDateString();
+                row.appendChild(fechaCell);
+
+                modalContent.appendChild(row);
+            });
+        }
+
+
+        
+
+        
+
+
+
+
+
+
+       document.addEventListener('DOMContentLoaded', function() {
+            let currentIndex = 0;
+            let instructors = [];
+            const itemsPerPage = 20;
+
+            function loadCargos() {
+                fetch('/api/cargos/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const cargoSelect = document.getElementById('filter-cargo');
+                        data.forEach(cargo => {
+                            const option = document.createElement('option');
+                            option.value = cargo.id;
+                            option.textContent = cargo.nombre;
+                            cargoSelect.appendChild(option);
+                        });
+                });
+            }
+
+            function loadLocales() {
+                fetch('/api/locales/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const localSelect = document.getElementById('filter-local');
+                        data.forEach(local => {
+                            const option = document.createElement('option');
+                            option.value = local.id;
+                            option.textContent = local.nombre;
+                            localSelect.appendChild(option);
+                        });
+                    });
+            }
+
+            function loadEspecialidades() {
+                fetch('/api/especialidades/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const especialidadesSelect = document.getElementById('filter-especialidades');
+                        data.forEach(especialidad => {
+                            const option = document.createElement('option');
+                            option.value = especialidad.id;
+                            option.textContent = especialidad.nombre;
+                            especialidadesSelect.appendChild(option);
+                        });
+                    });
+            }
+
+
+            function renderInstructors(startIndex) {
+                const container = document.getElementById('instructors-container');
+                container.innerHTML = ''; // Limpiar el contenido previo
+                const endIndex = Math.min(startIndex + itemsPerPage, instructors.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const instructor = instructors[i];
+                    var relativeUrl = instructor.imagen.replace('http://127.0.0.1:8000', '');
+                    if (instructor) {
+                        const horariosBase64 = btoaUnicode(JSON.stringify(instructor.horarios)); // Codificar la cadena de horarios
+                        const especialidadesBase64 = btoaUnicode(JSON.stringify(instructor.especialidades));
+                        const descripcion = instructor.descripcion || "No hay descripción disponible";
+                        const nombreCompleto = `${instructor.nombre} ${instructor.apellidos}`;
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div class="instructor-info">
+                                    <img src="${relativeUrl}" alt="Avatar" class="avatar">
+                                    <div>
+                                        <strong>${instructor.nombre} ${instructor.apellidos}</strong><br>
+                                        <span>${instructor.cargo.nombre}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${instructor.numero}</td>
+                            <td>${instructor.inicio_contrato}</td>
+                            <td>${instructor.fin_contrato}</td>
+                            <td>
+                                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#horariosModal" onclick="showHorarios('${horariosBase64}', '${instructor.nombre} ${instructor.apellidos}')">
+                                    Ver <i class="fa-solid fa-eye"></i> 
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#especialidadesModal" onclick="showEspecialidades('${especialidadesBase64}', '${instructor.nombre} ${instructor.apellidos}')">
+                                    Ver <i class="fa-solid fa-eye"></i> 
+                                </button>
+                            </td>
+                            <td class="estrellas_instructor">
+                                ${'★'.repeat(instructor.num_estrellas)}
+                                ${'☆'.repeat(5 - instructor.num_estrellas)}
+                            </td>
+                            <td>${instructor.años_experiencia}</td>
+                            <td>
+                                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#descripcionModal" onclick="showDescripcion('${descripcion}', '${instructor.nombre} ${instructor.apellidos}')">
+                                    Ver <i class="fa-solid fa-eye"></i> 
+                                </button>
+                            </td>
+                            <td>${instructor.genero}</td>
+                            <td>${instructor.cargo.nombre}</td>
+                            <td>${instructor.local.nombre}</td>
+                            <td>
+                                <button style="background-color: ${instructor.estado ? '#28a745' : '#dc3545'}; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: default;">
+                                    ${instructor.estado ? 'Activo' : 'Inactivo'}
+                                </button>
+                            </td>
+                            <td>${instructor.fecha_creacion}</td>
+                            <td>${instructor.fecha_actualizacion}</td>
+                            <td>
+                                <button class="details-btn" onclick="showInstructorInfo(${instructor.id}, '${nombreCompleto}')"><i class="fa-solid fa-file-lines"></i></button>
+                                <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="delete-btn" onclick="confirmDelete(${instructor.id})"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `;
+                        container.appendChild(row);
+                    }
+                }
+
+                updatePageInfo();
+            }
+
+
+            
+
+            function updatePageInfo() {
+                const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
+                const totalPages = Math.ceil(instructors.length / itemsPerPage);
+                document.getElementById('page-info').textContent = `${currentPage} de ${totalPages}`;
+            }
+
+            function loadInstructors() {
+                let url = '/api/instructores/?';
+                const search = document.getElementById('search').value;
+                const cargo = document.getElementById('filter-cargo').value;
+                const local = document.getElementById('filter-local').value;
+                const genero = document.getElementById('filter-genero').value;
+                const estrellas = document.getElementById('filter-estrellas').value;
+                const experiencia = document.getElementById('filter-experiencia').value;
+                const especialidades = document.getElementById('filter-especialidades').value;
+                const dia = document.getElementById('filter-dia').value;
+                const horaInicio = document.getElementById('filter-hora-inicio').value;
+                const horaFin = document.getElementById('filter-hora-fin').value;
+                const inicioContrato = document.getElementById('filter-inicio-contrato').value;
+                const finContrato = document.getElementById('filter-fin-contrato').value;
+                const estado = document.getElementById('filter-estado').value;
+                const fechaCreacion = document.getElementById('filter-fecha-creacion').value;
+                const fechaActualizacion = document.getElementById('filter-fecha-actualizacion').value;
+
+                if (search) url += `nombre=${search}&`;
+                if (cargo) url += `cargo=${cargo}&`;
+                if (local) url += `local=${local}&`;
+                if (genero) url += `genero=${genero}&`;
+                if (estrellas) url += `num_estrellas=${estrellas}&`;
+                if (experiencia) url += `años_experiencia=${experiencia}&`;
+                if (especialidades) url += `especialidades=${especialidades}&`;
+                if (dia) url += `dia=${dia}&`;
+                if (horaInicio) url += `hora_inicio=${horaInicio}&`;
+                if (horaFin) url += `hora_fin=${horaFin}&`;
+                if (inicioContrato) url += `inicio_contrato=${inicioContrato}&`;
+                if (finContrato) url += `fin_contrato=${finContrato}&`;
+                if (estado) url += `estado=${estado}&`;
+                if (fechaCreacion) url += `fecha_creacion=${fechaCreacion}&`;
+                if (fechaActualizacion) url += `fecha_actualizacion=${fechaActualizacion}&`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        instructors = data;
+                        renderInstructors(currentIndex);
+                    });
+            }
+
+
+            document.getElementById('next-page').addEventListener('click', function() {
+                if (currentIndex + itemsPerPage < instructors.length) {
+                    currentIndex += itemsPerPage;
+                    renderInstructors(currentIndex);
+                }
+            });
+
+            document.getElementById('prev-page').addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex -= itemsPerPage;
+                    renderInstructors(currentIndex);
+                }
+            });
+
+            document.getElementById('reload-table').addEventListener('click', function() {
+                loadInstructors(); // Recargar la lista de instructores
+            });
+
+            document.getElementById('clear-filters').addEventListener('click', function() {
+                document.querySelectorAll('.filters input, .filters select').forEach(input => {
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        input.checked = false;
+                    } else {
+                        input.value = '';
+                    }
+                });
+                loadInstructors(); // Recargar la lista de instructores sin filtros
+            });
+
+            // Cargar instructores y aplicar filtros
+            document.querySelectorAll('.filters input, .filters select').forEach(input => {
+                input.addEventListener('change', loadInstructors);
+            });
+
+            loadCargos();  // Cargar cargos al inicio
+            loadLocales();  // Cargar locales al inicio
+            loadInstructors();  // Cargar instructores al inicio
+            loadEspecialidades();
+        });
+
+
+
+    </script>
+</body>
+</html>

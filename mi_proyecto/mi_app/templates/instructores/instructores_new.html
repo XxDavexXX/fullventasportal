@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/newinstructor.css' %}">
+</head>
+<body>
+    <div class="contain_all_form">
+        <div class="container">
+            <h1>Agregar Usuario</h1>
+            <form id="add-instructor-form" enctype="multipart/form-data">
+                <div class="image-upload">
+                    <img src="https://via.placeholder.com/150" alt="Imagen de Perfil">
+                    <label for="imagen">Seleccionar archivo</label>
+                    <input type="file" id="imagen" name="imagen" accept="image/*">
+                    <p>Formatos permitidos: JPG, JPEG, PNG</p>
+                </div>
+                
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nuevo nombre" required>
+                
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" placeholder="Ingresa el nuevo apellido" required>
+                
+                <label for="años_experiencia">Años de Experiencia:</label>
+                <input type="text" id="años_experiencia" name="años_experiencia" placeholder="Ingresa los años de experiencia" required>
+                
+                <label for="local">Local:</label>
+                <select id="local" name="local" required>
+                    <!-- Opciones de Local -->
+                </select>
+                
+                <label for="cargo">Cargo:</label>
+                <select id="cargo" name="cargo" required>
+                    <!-- Opciones de Cargo -->
+                </select>
+                
+                <label for="inicio_contrato">Inicio de contrato:</label>
+                <input type="date" id="inicio_contrato" name="inicio_contrato" required>
+                
+                <label for="fin_contrato">Fin de contrato:</label>
+                <input type="date" id="fin_contrato" name="fin_contrato" required>
+                
+                <label for="horario">Horario:</label>
+                <select id="horario" name="horario" required>
+                    <!-- Opciones de Horario -->
+                </select>
+    
+                <button type="submit">Agregar</button>
+                <button type="button" id="cancelar-btn">Cancelar</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('add-instructor-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/api/locales/')
+                .then(response => response.json())
+                .then(data => {
+                    const localSelect = document.getElementById('local');
+                    data.forEach(local => {
+                        const option = document.createElement('option');
+                        option.value = local.id;
+                        option.textContent = local.nombre;
+                        localSelect.appendChild(option);
+                    });
+                });
+
+            fetch('/api/cargos/')
+                .then(response => response.json())
+                .then(data => {
+                    const cargoSelect = document.getElementById('cargo');
+                    data.forEach(cargo => {
+                        const option = document.createElement('option');
+                        option.value = cargo.id;
+                        option.textContent = cargo.nombre;
+                        cargoSelect.appendChild(option);
+                    });
+                });
+
+            fetch('/api/instructores/', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Instructor agregado exitosamente');
+                    window.location.href = '/api/instructoreslist'; 
+                } else {
+                    alert('Hubo un error al agregar el instructor');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('cancelar-btn').addEventListener('click', function() {
+            window.location.href = '/api/instructoreslist';
+        });
+
+    </script>
+</body>
+</html>
